@@ -1,0 +1,52 @@
+<%
+	
+	var allNavLinks = [
+		{Title:'Home',Link:'/'},
+		{Title:'About',Link:'/calendar'},
+		{Title:'Referrals',Link:'/referrals'},
+		{Title:'Contact',Link:'/contact'}
+		//{Title:'Referrals',Link:'./referral'},
+		//{Title:'Contact',Link:'./contact'}
+	];
+
+	var currentPageIndex = allNavLinks.findIndex(x => x.Title==page);
+	if(currentPageIndex > -1)
+	{
+		allNavLinks[currentPageIndex].Active = true;
+	}
+%>
+
+
+<!-- Navigation -->
+
+<nav class="navbar navbar-expand-md navbar-dark navBarColor fixed-top">
+	<div class="container">
+
+		<a class="navbar-brand" href="/"><%= configFile.companyName%></a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+	  		<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarResponsive">
+		 	<ul class="navbar-nav ml-auto">
+
+		 	<%
+		 		allNavLinks.forEach(function(index){
+		 			if(index.Active == true){%>
+				 		<li class="nav-item">
+					  		<a class="nav-link active" href="<%=index.Link%>"><%=index.Title%>
+					  			<span class="sr-only">(current)</span>
+					  		</a>
+						</li>
+					<%}else{%>
+						<li class="nav-item">
+					  		<a class="nav-link" href="<%=index.Link%>"><%=index.Title%></a>
+						</li>
+					<%} 
+		 		});
+		 	%>
+		  	</ul>
+		  	
+		 </div>
+	</div>
+	
+</nav>
