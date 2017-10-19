@@ -1,0 +1,93 @@
+
+<%
+
+//var pagecss = ['/stylesheets/index.css'];
+//var pagejs = ['/javascripts/index.js'];
+
+	
+%>
+
+
+<%- include('./header',{extraCSS:[],extraJS:[]}); %>
+
+
+<body>
+
+	<%- include('./navbar',{page:'Referral'}); %>
+
+
+	<div class="container mt-4">
+		<form>
+			<div class="row mb-md-3">
+				<div class="col-md-6 mx-auto">
+					<h4>Submitter Information</h4>
+					<div class="row form-group mt-md-4">
+						<label for="SubmitterFName" class="col-2 col-form-label">Name</label>
+						<div class="col-md-5 mb-2 mb-sm-0">
+						    <input type="text" class="form-control" id="SubmitterFName" placeholder="First">
+						</div>
+						<div class="col-md-5">
+							<input type="text" class="form-control" id="SubmitterLName"  placeholder="Last">
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="SubmitterEmail" class="col-2 col-form-label">Email</label>
+						<div class="col-md-10">
+					    	<input type="email" class="form-control" id="SubmitterEmail" aria-describedby="emailHelp" placeholder="Email">
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="SubmitterPhone" class="col-2 col-form-label">Phone</label>
+						<div class="col-md-10">
+					    	<input type="tel" class="form-control" id="SubmitterPhone"  placeholder="10 Digit Number">
+						</div>
+					</div>
+				</div>
+				
+			</div> <!--end first form row-->
+			<div class="row">
+				<div class="col-md-6 mx-auto">
+					<h4>Client Information</h4>
+					<div class="row form-group mt-md-4">
+						<label for="ClientFName" class="col-2 col-form-label">Name</label>
+						<div class="col-md-5 mb-2 mb-sm-0">
+						    <input type="text" class="form-control" id="ClientFName" placeholder="First">
+						</div>
+						<div class="col-md-5">
+							<input type="text" class="form-control" id="ClientLName"  placeholder="Last">
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="ClientEmail" class="col-2 col-form-label">Email</label>
+						<div class="col-md-10">
+					    	<input type="email" class="form-control" id="ClientEmail" aria-describedby="emailHelp" placeholder="Email">
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="ClientPhone" class="col-2 col-form-label">Phone</label>
+						<div class="col-md-10">
+					    	<input type="tel" class="form-control" id="ClientPhone"  placeholder="10 Digit Number">
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="ClientAltPhone" class="col-md-2 col-form-label">Alt-Phone</label>
+						<div class="col-md-10">
+					    	<input type="tel" class="form-control" id="ClientAltPhone"  placeholder="10 Digit Number">
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="ClientDOB" class="col-2 col-form-label">Birthday</label>
+						<div class="col-md-10">
+					    	<input type="date" class="form-control" id="ClientDOB">
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</form>
+	</div><!--end form container-->
+	
+	
+
+
+<%- include('./footer'); %>

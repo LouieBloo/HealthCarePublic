@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var database = require('./database');
 var index = require('./routes/index');
 var config = require('./config');
+var referral = require('./routes/referral');
 
 var app = express();
 
@@ -27,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.locals.configFile = config;
 
 app.use('/', index);
-
+app.use('/referral',referral);
 
 
 
