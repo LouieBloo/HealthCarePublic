@@ -15,11 +15,34 @@
 
 	<%- include('./navbar',{page:'Referral'}); %>
 
+	<!-- override bootstraps default collapse class which is block. need to be flex for this form-->
+	<style>
+		.collapse.show{
+			display:flex;
+		}
+	</style>
 
 	<div class="container mt-4">
 		<form>
 			<div class="row mb-md-3">
-				<div class="col-md-6 mx-auto">
+				<div class="col-md-7 mx-auto">
+					<div class="row form-group mt-md-4">
+						<label for="SubmitterFName" class="col-12 col-md-3 col-form-label">Referral Type<small class="form-text text-muted">Please choose this first</small></label>
+
+						<div class="col-md-6">
+						    <select class="custom-select" id="SubmitterFName">
+					    		<option value="EOR" selected>EOR</option>
+					    		<option value="PA">PA</option>
+					    		<option value="Respit">Respit</option>
+					    	</select>
+
+						</div>
+					</div>
+				</div>
+				
+			</div> <!--end first form row-->
+			<div class="row mb-md-3">
+				<div class="col-md-7 mx-auto">
 					<h4>Submitter Information</h4>
 					<div class="row form-group mt-md-4">
 						<label for="SubmitterFName" class="col-2 col-form-label">Name</label>
@@ -45,8 +68,35 @@
 				</div>
 				
 			</div> <!--end first form row-->
+			<div class="row mb-md-3">
+				<div class="col-md-7 mx-auto">
+					<h4>Worker Information</h4>
+					<div class="row form-group mt-md-4">
+						<label for="WorkerFName" class="col-2 col-form-label">Name</label>
+						<div class="col-md-5 mb-2 mb-sm-0">
+						    <input type="text" class="form-control" id="WorkerFName" placeholder="First">
+						</div>
+						<div class="col-md-5">
+							<input type="text" class="form-control" id="WorkerLName"  placeholder="Last">
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="WorkerEmail" class="col-2 col-form-label">Email</label>
+						<div class="col-md-10">
+					    	<input type="email" class="form-control" id="WorkerEmail" aria-describedby="emailHelp" placeholder="Email">
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="WorkerPhone" class="col-2 col-form-label">Phone</label>
+						<div class="col-md-10">
+					    	<input type="tel" class="form-control" id="WorkerPhone"  placeholder="10 Digit Number">
+						</div>
+					</div>
+				</div>
+				
+			</div> <!--end first form row-->
 			<div class="row">
-				<div class="col-md-6 mx-auto">
+				<div class="col-md-7 mx-auto">
 					<h4>Client Information</h4>
 					<div class="row form-group mt-md-4">
 						<label for="ClientFName" class="col-2 col-form-label">Name</label>
@@ -70,15 +120,104 @@
 						</div>
 					</div>
 					<div class="row form-group">
-						<label for="ClientAltPhone" class="col-md-2 col-form-label">Alt-Phone</label>
+						<label for="ClientAltPhone" class="col-md-2 col-form-label">Alt-Phone*</label>
 						<div class="col-md-10">
 					    	<input type="tel" class="form-control" id="ClientAltPhone"  placeholder="10 Digit Number">
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="ClientStreet" class="col-md-2 col-form-label">Address</label>
+						<div class="col-md-10">
+							<div class="row mb-2">
+								<div class="col-md-6 mb-2 mb-sm-0">
+									<input type="text" class="form-control" id="ClientStreet"  placeholder="Street">
+								</div>
+								<div class="col-md-6">
+									<input type="text" class="form-control" id="ClientStreet2"  placeholder="Apartment, suite, unit, etc">
+								</div>
+							</div>
+					    	<div class="row mb-2">
+								<div class="col-md-6 mb-2 mb-sm-0">
+									<input type="text" class="form-control" id="ClientCity"  placeholder="City">
+								</div>
+								<div class="col-md-3 mb-2 mb-sm-0">
+									<input type="text" class="form-control" id="ClientState"  placeholder="State">
+								</div>
+								<div class="col-md-3">
+									<input type="text" class="form-control" id="ClientZip"  placeholder="Zip">
+								</div>
+							</div>
+							<div class="row justify-content-end">
+								<div class="col-md-6 d-flex justify-content-end">
+									<button class="btn-sm btn-primary" type="button" data-toggle="collapse" data-target="#altCollapse" aria-expanded="false" aria-controls="collapseExample">Add Alternate Address</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row form-group collapse" id="altCollapse">
+						<label for="ClientAltStreet" class="col-md-2 col-form-label">Alt Address</label>
+						<div class="col-md-10">
+							<div class="row mb-2">
+								<div class="col-md-6 mb-2 mb-sm-0">
+									<input type="text" class="form-control" id="ClientAltStreet"  placeholder="Street">
+								</div>
+								<div class="col-md-6">
+									<input type="text" class="form-control" id="ClientAltStreet2"  placeholder="Apartment, suite, unit, etc">
+								</div>
+							</div>
+					    	<div class="row">
+								<div class="col-md-6 mb-2 mb-sm-0">
+									<input type="text" class="form-control" id="ClientAltCity"  placeholder="City">
+								</div>
+								<div class="col-md-3 mb-2 mb-sm-0">
+									<input type="text" class="form-control" id="ClientAltState"  placeholder="State">
+								</div>
+								<div class="col-md-3">
+									<input type="text" class="form-control" id="ClientAltZip"  placeholder="Zip">
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="row form-group">
 						<label for="ClientDOB" class="col-2 col-form-label">Birthday</label>
 						<div class="col-md-10">
 					    	<input type="date" class="form-control" id="ClientDOB">
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="ClientUCI" class="col-md-2 col-form-label">UCI</label>
+						<div class="col-md-10">
+					    	<input type="text" class="form-control" id="ClientUCI"  placeholder="Universal Client Identification">
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="ClientLanguage" class="col-md-2 col-form-label">Language*</label>
+						<div class="col-md-10">
+					    	<input type="text" class="form-control" id="ClientLanguage"  placeholder="Language">
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="ClientHours" class="col-md-2 col-form-label">Hours</label>
+						<div class="col-md-5 mb-2 mb-sm-0">
+					    	<input type="number" class="form-control" id="ClientHours"  placeholder="Hours">
+						</div>
+						<div class="col-md-5">
+					    	<select class="custom-select" id="ClientHourType">
+					    		<option value="quarterly" selected>Per Quarter</option>
+					    		<option value="monthly">Per Month</option>
+					    	</select>
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="ClientDiagnosis" class="col-md-2 col-form-label">Diagnosis*</label>
+						<div class="col-md-10">
+					    	<textarea class="form-control" rows="3" id="ClientDiagnosis"></textarea>
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="ClientAdditionalInfo" class="col-md-2 col-form-label">Additional Info*</label>
+						<div class="col-md-10">
+					    	<textarea class="form-control" rows="2" id="ClientAdditionalInfo"></textarea>
 						</div>
 					</div>
 				</div>
