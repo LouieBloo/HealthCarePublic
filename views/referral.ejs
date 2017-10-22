@@ -4,6 +4,8 @@
 //var pagecss = ['/stylesheets/index.css'];
 //var pagejs = ['/javascripts/index.js'];
 
+
+
 	
 %>
 
@@ -23,14 +25,16 @@
 	</style>
 
 	<div class="container mt-4">
-		<form>
+
+
+		<form action="./referral" method="post">
 			<div class="row mb-md-3">
 				<div class="col-md-7 mx-auto">
 					<div class="row form-group mt-md-4">
-						<label for="SubmitterFName" class="col-12 col-md-3 col-form-label">Referral Type<small class="form-text text-muted">Please choose this first</small></label>
+						<label for="ReferralType" class="col-12 col-md-3 col-form-label">Referral Type<small class="form-text text-muted">Please choose this first</small></label>
 
 						<div class="col-md-6">
-						    <select class="custom-select" id="SubmitterFName">
+						    <select class="custom-select" name="ReferralType" id="ReferralType" onchange="referralTypeChange(this.value)">
 					    		<option value="EOR" selected>EOR</option>
 					    		<option value="PA">PA</option>
 					    		<option value="Respit">Respit</option>
@@ -41,88 +45,104 @@
 				</div>
 				
 			</div> <!--end first form row-->
-			<div class="row mb-md-3">
+			<div class="row mb-md-3 ">
 				<div class="col-md-7 mx-auto">
 					<h4>Submitter Information</h4>
 					<div class="row form-group mt-md-4">
 						<label for="SubmitterFName" class="col-2 col-form-label">Name</label>
 						<div class="col-md-5 mb-2 mb-sm-0">
-						    <input type="text" class="form-control" id="SubmitterFName" placeholder="First">
+						    <input type="text" class="form-control <%= prefill.SubmitterFName.error%>" name="SubmitterFName" placeholder="First" value="<%= prefill.SubmitterFName.value%>">
+						    <div class="invalid-feedback">Required</div>
 						</div>
 						<div class="col-md-5">
-							<input type="text" class="form-control" id="SubmitterLName"  placeholder="Last">
+							<input type="text" class="form-control <%= prefill.SubmitterLName.error%>" name="SubmitterLName"  placeholder="Last" value="<%= prefill.SubmitterLName.value%>">
+							<div class="invalid-feedback">Required</div>
 						</div>
 					</div>
 					<div class="row form-group">
 						<label for="SubmitterEmail" class="col-2 col-form-label">Email</label>
 						<div class="col-md-10">
-					    	<input type="email" class="form-control" id="SubmitterEmail" aria-describedby="emailHelp" placeholder="Email">
+					    	<input type="email" class="form-control <%= prefill.SubmitterEmail.error%>" name="SubmitterEmail" aria-describedby="emailHelp" placeholder="Email" value="<%= prefill.SubmitterEmail.value%>">
+					    	<div class="invalid-feedback">Valid Email Required</div>
 						</div>
 					</div>
 					<div class="row form-group">
 						<label for="SubmitterPhone" class="col-2 col-form-label">Phone</label>
 						<div class="col-md-10">
-					    	<input type="tel" class="form-control" id="SubmitterPhone"  placeholder="10 Digit Number">
+					    	<input type="tel" class="form-control <%= prefill.SubmitterPhone.error%>" name="SubmitterPhone"  placeholder="10 Digit Number" value="<%= prefill.SubmitterPhone.value%>">
+					    	<div class="invalid-feedback">10 Digit Number Required</div>
 						</div>
 					</div>
 				</div>
-				
 			</div> <!--end first form row-->
-			<div class="row mb-md-3">
+
+
+			<div class="row mb-md-3 collapse show" id="WorkerRow">
 				<div class="col-md-7 mx-auto">
 					<h4>Worker Information</h4>
 					<div class="row form-group mt-md-4">
 						<label for="WorkerFName" class="col-2 col-form-label">Name</label>
 						<div class="col-md-5 mb-2 mb-sm-0">
-						    <input type="text" class="form-control" id="WorkerFName" placeholder="First">
+						    <input type="text" class="form-control <%= prefill.WorkerFName.error%>" name="WorkerFName" placeholder="First" value="<%= prefill.WorkerFName.value%>">
+						    <div class="invalid-feedback">Required</div>
 						</div>
 						<div class="col-md-5">
-							<input type="text" class="form-control" id="WorkerLName"  placeholder="Last">
+							<input type="text" class="form-control <%= prefill.WorkerLName.error%>" name="WorkerLName"  placeholder="Last" value="<%= prefill.WorkerLName.value%>">
+							<div class="invalid-feedback">Required</div>
 						</div>
 					</div>
 					<div class="row form-group">
 						<label for="WorkerEmail" class="col-2 col-form-label">Email</label>
 						<div class="col-md-10">
-					    	<input type="email" class="form-control" id="WorkerEmail" aria-describedby="emailHelp" placeholder="Email">
+					    	<input type="email" class="form-control <%= prefill.WorkerEmail.error%>" name="WorkerEmail" aria-describedby="emailHelp" placeholder="Email" value="<%= prefill.WorkerEmail.value%>">
+					    	<div class="invalid-feedback">Valid Email Required</div>
 						</div>
 					</div>
 					<div class="row form-group">
 						<label for="WorkerPhone" class="col-2 col-form-label">Phone</label>
 						<div class="col-md-10">
-					    	<input type="tel" class="form-control" id="WorkerPhone"  placeholder="10 Digit Number">
+					    	<input type="tel" class="form-control <%= prefill.WorkerPhone.error%>" name="WorkerPhone"  placeholder="10 Digit Number" value="<%= prefill.WorkerPhone.value%>">
+					    	<div class="invalid-feedback">10 Digit Number Required</div>
 						</div>
 					</div>
 				</div>
 				
 			</div> <!--end first form row-->
-			<div class="row">
+			<div class="row mb-md-3 ">
 				<div class="col-md-7 mx-auto">
 					<h4>Client Information</h4>
+					<small class="form-text text-muted">* fields are optional</small>
 					<div class="row form-group mt-md-4">
 						<label for="ClientFName" class="col-2 col-form-label">Name</label>
 						<div class="col-md-5 mb-2 mb-sm-0">
-						    <input type="text" class="form-control" id="ClientFName" placeholder="First">
+						    <input type="text" class="form-control <%= prefill.ClientFName.error%>" name="ClientFName" placeholder="First" value="<%= prefill.ClientFName.value%>">
+						    <div class="invalid-feedback">Required</div>
 						</div>
 						<div class="col-md-5">
-							<input type="text" class="form-control" id="ClientLName"  placeholder="Last">
+							<input type="text" class="form-control <%= prefill.ClientLName.error%>" name="ClientLName"  placeholder="Last" value="<%= prefill.ClientLName.value%>">
+							<div class="invalid-feedback">Required</div>
 						</div>
 					</div>
 					<div class="row form-group">
 						<label for="ClientEmail" class="col-2 col-form-label">Email</label>
 						<div class="col-md-10">
-					    	<input type="email" class="form-control" id="ClientEmail" aria-describedby="emailHelp" placeholder="Email">
+					    	<input type="email" class="form-control <%= prefill.ClientEmail.error%>" name="ClientEmail" aria-describedby="emailHelp" placeholder="Email" value="<%= prefill.ClientEmail.value%>">
+					    	<div class="invalid-feedback">Valid Email Required</div>
 						</div>
 					</div>
 					<div class="row form-group">
 						<label for="ClientPhone" class="col-2 col-form-label">Phone</label>
 						<div class="col-md-10">
-					    	<input type="tel" class="form-control" id="ClientPhone"  placeholder="10 Digit Number">
+					    	<input type="tel" class="form-control <%= prefill.ClientPhone.error%>" name="ClientPhone"  placeholder="10 Digit Number" value="<%= prefill.ClientPhone.value
+					    	%>">
+					    	<div class="invalid-feedback">10 Digit Number Required</div>
 						</div>
 					</div>
 					<div class="row form-group">
 						<label for="ClientAltPhone" class="col-md-2 col-form-label">Alt-Phone*</label>
 						<div class="col-md-10">
-					    	<input type="tel" class="form-control" id="ClientAltPhone"  placeholder="10 Digit Number">
+					    	<input type="tel" class="form-control <%= prefill.ClientAltPhone.error%>" name="ClientAltPhone"  placeholder="10 Digit Number" value="<%= prefill.ClientAltPhone.value%>">
+					    	<div class="invalid-feedback">10 Digit Number Required</div>
 						</div>
 					</div>
 					<div class="row form-group">
@@ -130,21 +150,25 @@
 						<div class="col-md-10">
 							<div class="row mb-2">
 								<div class="col-md-6 mb-2 mb-sm-0">
-									<input type="text" class="form-control" id="ClientStreet"  placeholder="Street">
+									<input type="text" class="form-control <%= prefill.ClientStreet.error%>" name="ClientStreet"  placeholder="Street" value="<%= prefill.ClientStreet.value%>">
+									<div class="invalid-feedback">Street Required</div>
 								</div>
 								<div class="col-md-6">
-									<input type="text" class="form-control" id="ClientStreet2"  placeholder="Apartment, suite, unit, etc">
+									<input type="text" class="form-control <%= prefill.ClientStreet2.error%>" name="ClientStreet2"  placeholder="Apartment, suite, unit, etc" value="<%= prefill.ClientStreet2.value%>">
 								</div>
 							</div>
 					    	<div class="row mb-2">
 								<div class="col-md-6 mb-2 mb-sm-0">
-									<input type="text" class="form-control" id="ClientCity"  placeholder="City">
+									<input type="text" class="form-control <%= prefill.ClientCity.error%>" name="ClientCity"  placeholder="City" value="<%= prefill.ClientCity.value%>">
+									<div class="invalid-feedback">City Required</div>
 								</div>
 								<div class="col-md-3 mb-2 mb-sm-0">
-									<input type="text" class="form-control" id="ClientState"  placeholder="State">
+									<input type="text" class="form-control <%= prefill.ClientState.error%>" name="ClientState"  placeholder="State" value="<%= prefill.ClientState.value%>">
+									<div class="invalid-feedback">State Required</div>
 								</div>
 								<div class="col-md-3">
-									<input type="text" class="form-control" id="ClientZip"  placeholder="Zip">
+									<input type="text" class="form-control <%= prefill.ClientZip.error%>" name="ClientZip"  placeholder="Zip" value="<%= prefill.ClientZip.value%>">
+									<div class="invalid-feedback">Zip Required</div>
 								</div>
 							</div>
 							<div class="row justify-content-end">
@@ -159,21 +183,21 @@
 						<div class="col-md-10">
 							<div class="row mb-2">
 								<div class="col-md-6 mb-2 mb-sm-0">
-									<input type="text" class="form-control" id="ClientAltStreet"  placeholder="Street">
+									<input type="text" class="form-control <%= prefill.ClientAltStreet.error%>" name="ClientAltStreet"  placeholder="Street" value="<%= prefill.ClientAltStreet.value%>">
 								</div>
 								<div class="col-md-6">
-									<input type="text" class="form-control" id="ClientAltStreet2"  placeholder="Apartment, suite, unit, etc">
+									<input type="text" class="form-control <%= prefill.ClientAltStreet2.error%>" name="ClientAltStreet2"  placeholder="Apartment, suite, unit, etc" value="<%= prefill.ClientAltStreet2.value%>">
 								</div>
 							</div>
 					    	<div class="row">
 								<div class="col-md-6 mb-2 mb-sm-0">
-									<input type="text" class="form-control" id="ClientAltCity"  placeholder="City">
+									<input type="text" class="form-control <%= prefill.ClientAltCity.error%>" name="ClientAltCity"  placeholder="City" value="<%= prefill.ClientAltCity.value%>">
 								</div>
 								<div class="col-md-3 mb-2 mb-sm-0">
-									<input type="text" class="form-control" id="ClientAltState"  placeholder="State">
+									<input type="text" class="form-control <%= prefill.ClientAltState.error%>" name="ClientAltState"  placeholder="State" value="<%= prefill.ClientAltState.value%>">
 								</div>
 								<div class="col-md-3">
-									<input type="text" class="form-control" id="ClientAltZip"  placeholder="Zip">
+									<input type="text" class="form-control <%= prefill.ClientAltZip.error%>" name="ClientAltZip"  placeholder="Zip" value="<%= prefill.ClientAltZip.value%>">
 								</div>
 							</div>
 						</div>
@@ -181,28 +205,31 @@
 					<div class="row form-group">
 						<label for="ClientDOB" class="col-2 col-form-label">Birthday</label>
 						<div class="col-md-10">
-					    	<input type="date" class="form-control" id="ClientDOB">
+					    	<input type="date" class="form-control <%= prefill.ClientDOB.error%>" name="ClientDOB" value="<%= prefill.ClientDOB.value%>">
+					    	<div class="invalid-feedback">Birthday Required</div>
 						</div>
 					</div>
 					<div class="row form-group">
 						<label for="ClientUCI" class="col-md-2 col-form-label">UCI</label>
 						<div class="col-md-10">
-					    	<input type="text" class="form-control" id="ClientUCI"  placeholder="Universal Client Identification">
+					    	<input type="text" class="form-control <%= prefill.ClientUCI.error%>" name="ClientUCI"  placeholder="Universal Client Identification" value="<%= prefill.ClientUCI.value%>">
+					    	<div class="invalid-feedback">UCI Required</div>
 						</div>
 					</div>
 					<div class="row form-group">
 						<label for="ClientLanguage" class="col-md-2 col-form-label">Language*</label>
 						<div class="col-md-10">
-					    	<input type="text" class="form-control" id="ClientLanguage"  placeholder="Language">
+					    	<input type="text" class="form-control" name="ClientLanguage"  placeholder="Language" value="<%= prefill.ClientLanguage.value%>">
 						</div>
 					</div>
 					<div class="row form-group">
 						<label for="ClientHours" class="col-md-2 col-form-label">Hours</label>
 						<div class="col-md-5 mb-2 mb-sm-0">
-					    	<input type="number" class="form-control" id="ClientHours"  placeholder="Hours">
+					    	<input type="number" class="form-control <%= prefill.ClientHours.error%>" name="ClientHours"  placeholder="Hours" value="<%= prefill.ClientHours.value%>">
+					    	<div class="invalid-feedback">Number of Hours Required</div>
 						</div>
 						<div class="col-md-5">
-					    	<select class="custom-select" id="ClientHourType">
+					    	<select class="custom-select" name="ClientHourType" id="ClientHourType">
 					    		<option value="quarterly" selected>Per Quarter</option>
 					    		<option value="monthly">Per Month</option>
 					    	</select>
@@ -211,22 +238,92 @@
 					<div class="row form-group">
 						<label for="ClientDiagnosis" class="col-md-2 col-form-label">Diagnosis*</label>
 						<div class="col-md-10">
-					    	<textarea class="form-control" rows="3" id="ClientDiagnosis"></textarea>
+					    	<textarea class="form-control" rows="3" name="ClientDiagnosis" ><%= prefill.ClientDiagnosis.value%></textarea>
 						</div>
 					</div>
 					<div class="row form-group">
 						<label for="ClientAdditionalInfo" class="col-md-2 col-form-label">Additional Info*</label>
 						<div class="col-md-10">
-					    	<textarea class="form-control" rows="2" id="ClientAdditionalInfo"></textarea>
+					    	<textarea class="form-control" rows="2" name="ClientAdditionalInfo"><%= prefill.ClientAdditionalInfo.value%></textarea>
 						</div>
 					</div>
 				</div>
 				
+			</div><!-- end client row-->
+
+			<div class="row mb-md-3 ">
+				<div class="col-md-7 mx-auto">
+					<h4 id="FamilyHeader">Family Information</h4>
+					<div class="row form-group mt-md-4">
+						<label for="FamilyFName" class="col-2 col-form-label">Name</label>
+						<div class="col-md-5 mb-2 mb-sm-0">
+						    <input type="text" class="form-control <%= prefill.FamilyFName.error%>" name="FamilyFName" placeholder="First" value="<%= prefill.FamilyFName.value%>">
+						    <div class="invalid-feedback">Required</div>
+						</div>
+						<div class="col-md-5">
+							<input type="text" class="form-control <%= prefill.FamilyLName.error%>" name="FamilyLName"  placeholder="Last" value="<%= prefill.FamilyLName.value%>">
+							<div class="invalid-feedback">Required</div>
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="FamilyPhone" class="col-2 col-form-label">Phone</label>
+						<div class="col-md-10">
+					    	<input type="tel" class="form-control <%= prefill.FamilyPhone.error%>" name="FamilyPhone"  placeholder="10 Digit Number" value="<%= prefill.FamilyPhone.value%>">
+					    	<div class="invalid-feedback">10 Digit Number Required</div>
+						</div>
+					</div>
+					<div class="row form-group">
+						<label for="FamilyRelationship" class="col-2 col-form-label">Relationship</label>
+						<div class="col-md-10">
+					    	<input type="text" class="form-control <%= prefill.FamilyRelationship.error%>" name="FamilyRelationship"  placeholder="Father, Mother etc." value="<%= prefill.FamilyRelationship.value%>">
+					    	<div class="invalid-feedback">Relationship Required</div>
+						</div>
+					</div>
+				</div>
+			</div> <!--end first form row-->
+
+			<div class="row">
+				<div class="col-md-4 mx-auto form-group">
+				<button type="submit" class="btn btn-primary btn-lg btn-block">Submit Referral</button>
+				</div>
 			</div>
+
 		</form>
+
 	</div><!--end form container-->
 	
 	
+<script>
+
+	//show or hide the worker row based on the referral type
+	function referralTypeChange(value)
+	{
+		switch(value)
+		{
+			case "EOR":
+				$('#WorkerRow').collapse('show');
+				$('#FamilyHeader').html('Family Information');
+			break;
+			case "Respit":
+				$('#WorkerRow').collapse('hide');
+				$('#FamilyHeader').html('Family Information');
+			break;
+			case "PA":
+				$('#WorkerRow').collapse('hide');
+				$('#FamilyHeader').html('Family Information*');
+			break;
+
+		}
+	}
+
+	//set default referral type coming in from prefill if there is one
+	$('#ReferralType').val('<%= prefill.ReferralType.value%>');
+	referralTypeChange('<%= prefill.ReferralType.value%>');
+
+	//set default hour type if one in prefill
+	$('#ClientHourType').val('<%= prefill.ClientHourType.value%>');
+
+</script>
 
 
 <%- include('./footer'); %>
