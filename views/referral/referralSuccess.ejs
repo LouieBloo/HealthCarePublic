@@ -1,0 +1,33 @@
+
+<%
+
+//var pagecss = ['/stylesheets/index.css'];
+//var pagejs = ['/javascripts/index.js'];
+
+
+
+	
+%>
+
+
+<%- include('../header',{extraCSS:[],extraJS:[]}); %>
+
+
+<body>
+
+	<%- include('../navbar',{page:'Referral'}); %>
+
+
+	<div class="container mt-4">
+
+		<div class="alert alert-success" role="alert">
+			<h4 class="alert-heading">Referral Submitted Succesfully!</h4>
+			<p>Your referral was submitted succesfully. We will be in contact as soon as the referral is reviewed.<p>
+			<p>If you have any urgent questions or concerns, please email <a href="<%= configFile.supportEmail%>"><%= configFile.supportEmail%></a> or call <a href="tel:<%= configFile.supportPhoneNumber%>"><%= configFile.supportPhoneNumber%></a></p>
+
+			<a role="button" class="btn btn-primary" href="/referral">Create Another Referral</a>
+		</div>
+	</div>
+
+
+<%- include('../footer'); %>

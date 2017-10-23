@@ -4,18 +4,18 @@
 //var pagecss = ['/stylesheets/index.css'];
 //var pagejs = ['/javascripts/index.js'];
 
-
+var globalError = locals.error ? locals.error : '';
 
 	
 %>
 
 
-<%- include('./header',{extraCSS:[],extraJS:[]}); %>
+<%- include('../header',{extraCSS:[],extraJS:[]}); %>
 
 
 <body>
 
-	<%- include('./navbar',{page:'Referral'}); %>
+	<%- include('../navbar',{page:'Referral'}); %>
 
 	<!-- override bootstraps default collapse class which is block. need to be flex for this form-->
 	<style>
@@ -26,11 +26,27 @@
 
 	<div class="container mt-4">
 
+		<div class="row">
+			<div class="col-md-7 mx-auto">
+				<h1 class="display-6">Consumer Referral</h1>
+				<p>Please fill in the form to the best of your knowledge. We will reach out to you as soon as your referral is reviewed.</p>
+			</div>
+		</div>
+
+		<%if(globalError){%>
+			<div class="row">
+				<div class="col-md-7 mx-auto">
+					<h3 class="text-danger"><%=globalError%></h3>
+				</div>
+			</div>
+		<%}%>
 
 		<form action="./referral" method="post">
 			<div class="row mb-md-3">
 				<div class="col-md-7 mx-auto">
 					<div class="row form-group mt-md-4">
+
+
 						<label for="ReferralType" class="col-12 col-md-3 col-form-label">Referral Type<small class="form-text text-muted">Please choose this first</small></label>
 
 						<div class="col-md-6">
@@ -47,7 +63,7 @@
 			</div> <!--end first form row-->
 			<div class="row mb-md-3 ">
 				<div class="col-md-7 mx-auto">
-					<h4>Submitter Information</h4>
+					<h5>Submitter Information</h5>
 					<div class="row form-group mt-md-4">
 						<label for="SubmitterFName" class="col-2 col-form-label">Name</label>
 						<div class="col-md-5 mb-2 mb-sm-0">
@@ -79,7 +95,7 @@
 
 			<div class="row mb-md-3 collapse show" id="WorkerRow">
 				<div class="col-md-7 mx-auto">
-					<h4>Worker Information</h4>
+					<h5>Worker Information</h5>
 					<div class="row form-group mt-md-4">
 						<label for="WorkerFName" class="col-2 col-form-label">Name</label>
 						<div class="col-md-5 mb-2 mb-sm-0">
@@ -110,7 +126,7 @@
 			</div> <!--end first form row-->
 			<div class="row mb-md-3 ">
 				<div class="col-md-7 mx-auto">
-					<h4>Client Information</h4>
+					<h5>Client Information</h5>
 					<small class="form-text text-muted">* fields are optional</small>
 					<div class="row form-group mt-md-4">
 						<label for="ClientFName" class="col-2 col-form-label">Name</label>
@@ -179,7 +195,7 @@
 						</div>
 					</div>
 					<div class="row form-group collapse" id="altCollapse">
-						<label for="ClientAltStreet" class="col-md-2 col-form-label">Alt Address</label>
+						<label for="ClientAltStreet" class="col-md-2 col-form-label">Alt Address*</label>
 						<div class="col-md-10">
 							<div class="row mb-2">
 								<div class="col-md-6 mb-2 mb-sm-0">
@@ -223,7 +239,7 @@
 						</div>
 					</div>
 					<div class="row form-group">
-						<label for="ClientHours" class="col-md-2 col-form-label">Hours</label>
+						<label for="ClientHours" class="col-md-2 col-form-label">Hours*</label>
 						<div class="col-md-5 mb-2 mb-sm-0">
 					    	<input type="number" class="form-control <%= prefill.ClientHours.error%>" name="ClientHours"  placeholder="Hours" value="<%= prefill.ClientHours.value%>">
 					    	<div class="invalid-feedback">Number of Hours Required</div>
@@ -253,7 +269,7 @@
 
 			<div class="row mb-md-3 ">
 				<div class="col-md-7 mx-auto">
-					<h4 id="FamilyHeader">Family Information</h4>
+					<h5 id="FamilyHeader">Family Information</h5>
 					<div class="row form-group mt-md-4">
 						<label for="FamilyFName" class="col-2 col-form-label">Name</label>
 						<div class="col-md-5 mb-2 mb-sm-0">
@@ -326,4 +342,4 @@
 </script>
 
 
-<%- include('./footer'); %>
+<%- include('../footer'); %>
