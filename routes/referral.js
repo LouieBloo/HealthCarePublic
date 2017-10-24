@@ -3,12 +3,11 @@ var router = express.Router();
 var validator = require('validator');
 
 var database = require('../database');
+var phone = require('phone');
 
-var email = require('../lib/email');
 
 //render the page after a GET call
 var renderPage = function(req,res,next){
-
 
 	//when we build our page as default, we must pass in a prefill or the ejs file will error out
 	buildDefaultPrefill(req,function(err,response){
@@ -28,6 +27,8 @@ var renderPage = function(req,res,next){
 
 
 router.get('/success',function(req,res,next){
+
+
 	res.render('./referral/referralSuccess', { title: 'Referral Submitted Succesfully!'});
 });
 
@@ -81,7 +82,7 @@ var insertReferralIntoDatabase = function(referralData,callback)
 		var subLName = referralData.SubmitterLName.value;
 		subLName = subLName.charAt(0).toUpperCase() + subLName.slice(1);
 
-		database.db.query('INSERT INTO ReferralPerson (FName,LName,Email,Phone) VALUES (?,?,?,?)',[subFName,subLName,referralData.SubmitterEmail.value,referralData.SubmitterPhone.value],function(err,results){
+		database.db.query('INSERT INTO ReferralPerson (FName,LName,Email,Phone) VALUES (?,?,?,?)',[subFName,subLName,referralData.SubmitterEmail.value,phone(referralData.SubmitterPhone.value)[0]],function(err,results){
 			if(err){
 				reject(err);
 			}
@@ -103,7 +104,7 @@ var insertReferralIntoDatabase = function(referralData,callback)
 				var workerLName = referralData.WorkerLName.value;
 				workerLName = workerLName.charAt(0).toUpperCase() + workerLName.slice(1);
 
-				database.db.query('INSERT INTO ReferralPerson (FName,LName,Email,Phone) VALUES (?,?,?,?)',[workerFName,workerLName,referralData.WorkerEmail.value,referralData.WorkerPhone.value],function(err,results){
+				database.db.query('INSERT INTO ReferralPerson (FName,LName,Email,Phone) VALUES (?,?,?,?)',[workerFName,workerLName,referralData.WorkerEmail.value,phone(referralData.WorkerPhone.value)[0]],function(err,results){
 					if(err){
 						reject(err);
 					}
@@ -125,7 +126,7 @@ var insertReferralIntoDatabase = function(referralData,callback)
 
 			var street2 = referralData.ClientStreet2.value ? referralData.ClientStreet2.value : null;
 			
-			database.db.query('INSERT INTO Address (Street,Street2,State,ZIP) VALUES (?,?,?,?)',[referralData.ClientStreet.value,street2,referralData.ClientState.value,referralData.ClientZip.value],function(err,results){
+			database.db.query('INSERT INTO Address (Street,Street2,City,State,ZIP) VALUES (?,?,?,?,?)',[referralData.ClientStreet.value,street2,referralData.ClientCity.value,referralData.ClientState.value,referralData.ClientZip.value],function(err,results){
 				if(err){
 					reject(err);
 				}
@@ -145,7 +146,7 @@ var insertReferralIntoDatabase = function(referralData,callback)
 			{
 				var street2 = referralData.ClientAltStreet2.value ? referralData.ClientAltStreet2.value : null;
 				
-				database.db.query('INSERT INTO Address (Street,Street2,State,ZIP) VALUES (?,?,?,?)',[referralData.ClientAltStreet.value,street2,referralData.ClientAltState.value,referralData.ClientAltZip.value],function(err,results){
+				database.db.query('INSERT INTO Address (Street,Street2,City,State,ZIP) VALUES (?,?,?,?,?)',[referralData.ClientAltStreet.value,street2,referralData.ClientAltCity.value,referralData.ClientAltState.value,referralData.ClientAltZip.value],function(err,results){
 					if(err){
 						reject(err);
 					}
@@ -174,7 +175,7 @@ var insertReferralIntoDatabase = function(referralData,callback)
 			var language = referralData.ClientLanguage.value ? referralData.ClientLanguage.value : null;
 			var diag = referralData.ClientDiagnosis.value ? referralData.ClientDiagnosis.value : null;
 
-			var parameters = [clientFName,clientLName,referralData.ClientEmail.value,referralData.ClientPhone.value,altPhone,clientAddressID,clientAltAddressID,referralData.ClientDOB.value,referralData.ClientUCI.value,language,diag];
+			var parameters = [clientFName,clientLName,referralData.ClientEmail.value,phone(referralData.ClientPhone.value)[0],phone(altPhone)[0],clientAddressID,clientAltAddressID,referralData.ClientDOB.value,referralData.ClientUCI.value,language,diag];
 
 			database.db.query('INSERT INTO ReferralPerson (FName,LName,Email,Phone,AltPhone,Address,AltAddress,Birthday,UCI,Language,Diagnosis) VALUES (?,?,?,?,?,?,?,?,?,?,?)',parameters,function(err,results){
 
@@ -199,7 +200,7 @@ var insertReferralIntoDatabase = function(referralData,callback)
 			var familyLName = referralData.FamilyLName.value;
 			familyLName = familyLName.charAt(0).toUpperCase() + familyLName.slice(1);
 
-			database.db.query('INSERT INTO ReferralPerson (FName,LName,Phone,Relationship) VALUES (?,?,?,?)',[familyFName,familyLName,referralData.FamilyPhone.value,referralData.FamilyRelationship.value],function(err,results){
+			database.db.query('INSERT INTO ReferralPerson (FName,LName,Phone,Relationship) VALUES (?,?,?,?)',[familyFName,familyLName,phone(referralData.FamilyPhone.value)[0],referralData.FamilyRelationship.value],function(err,results){
 				if(err){
 					reject(err);
 				}
@@ -252,7 +253,6 @@ var checkIfReferralValid = function(req,callback)
 	buildDefaultPrefill(req,function(err,response){
 
 		var error = null;
-
 		//submitter
 		if(!req.body.SubmitterFName)
 		{
@@ -269,7 +269,7 @@ var checkIfReferralValid = function(req,callback)
 			response.SubmitterEmail.error = 'is-invalid';
 			error = true;
 		}
-		if(!validator.isMobilePhone(req.body.SubmitterPhone.replace(/[^0-9]/g,''),'en-US'))
+		if(phone(req.body.SubmitterPhone).length == 0)
 		{
 			response.SubmitterPhone.error = 'is-invalid';
 			error = true;
@@ -293,7 +293,7 @@ var checkIfReferralValid = function(req,callback)
 				response.WorkerEmail.error = 'is-invalid';
 				error = true;
 			}
-			if(!validator.isMobilePhone(req.body.WorkerPhone.replace(/[^0-9]/g,''),'en-US'))
+			if(phone(req.body.WorkerPhone).length == 0)
 			{
 				response.WorkerPhone.error = 'is-invalid';
 				error = true;
@@ -317,14 +317,14 @@ var checkIfReferralValid = function(req,callback)
 			response.ClientEmail.error = 'is-invalid';
 			error = true;
 		}
-		if(!validator.isMobilePhone(req.body.ClientPhone.replace(/[^0-9]/g,''),'en-US'))
+		if(phone(req.body.ClientPhone).length == 0)
 		{
 			response.ClientPhone.error = 'is-invalid';
 			error = true;
 		}
 		if(req.body.ClientAltPhone)
 		{
-			if(!validator.isMobilePhone(req.body.ClientAltPhone.replace(/[^0-9]/g,''),'en-US'))
+			if(phone(req.body.ClientAltPhone).length == 0)
 			{
 				response.ClientAltPhone.error = 'is-invalid';
 				error = true;
@@ -381,7 +381,7 @@ var checkIfReferralValid = function(req,callback)
 				response.FamilyLName.error = 'is-invalid';
 				error = true;
 			}
-			if(!validator.isMobilePhone(req.body.FamilyPhone.replace(/[^0-9]/g,''),'en-US'))
+			if(phone(req.body.FamilyPhone).length == 0)
 			{
 				response.FamilyPhone.error = 'is-invalid';
 				error = true;
