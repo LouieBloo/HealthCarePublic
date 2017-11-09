@@ -82,7 +82,7 @@ var insertReferralIntoDatabase = function(referralData,callback)
 		var subLName = referralData.SubmitterLName.value;
 		subLName = subLName.charAt(0).toUpperCase() + subLName.slice(1);
 
-		database.db.query('INSERT INTO ReferralPerson (FName,LName,Email,Phone) VALUES (?,?,?,?)',[subFName,subLName,referralData.SubmitterEmail.value,phone(referralData.SubmitterPhone.value)[0]],function(err,results){
+		database.db.query('INSERT INTO User (FName,LName,Email,Phone,Role,SubRole) VALUES (?,?,?,?,?,?)',[subFName,subLName,referralData.SubmitterEmail.value,phone(referralData.SubmitterPhone.value)[0],4,'Submitter'],function(err,results){
 			if(err){
 				reject(err);
 			}
@@ -104,7 +104,7 @@ var insertReferralIntoDatabase = function(referralData,callback)
 				var workerLName = referralData.WorkerLName.value;
 				workerLName = workerLName.charAt(0).toUpperCase() + workerLName.slice(1);
 
-				database.db.query('INSERT INTO ReferralPerson (FName,LName,Email,Phone) VALUES (?,?,?,?)',[workerFName,workerLName,referralData.WorkerEmail.value,phone(referralData.WorkerPhone.value)[0]],function(err,results){
+				database.db.query('INSERT INTO User (FName,LName,Email,Phone,Role,SubRole) VALUES (?,?,?,?,?,?)',[workerFName,workerLName,referralData.WorkerEmail.value,phone(referralData.WorkerPhone.value)[0],3,'Worker'],function(err,results){
 					if(err){
 						reject(err);
 					}
@@ -175,9 +175,9 @@ var insertReferralIntoDatabase = function(referralData,callback)
 			var language = referralData.ClientLanguage.value ? referralData.ClientLanguage.value : null;
 			var diag = referralData.ClientDiagnosis.value ? referralData.ClientDiagnosis.value : null;
 
-			var parameters = [clientFName,clientLName,referralData.ClientEmail.value,phone(referralData.ClientPhone.value)[0],phone(altPhone)[0],clientAddressID,clientAltAddressID,referralData.ClientDOB.value,referralData.ClientUCI.value,language,diag];
+			var parameters = [clientFName,clientLName,referralData.ClientEmail.value,phone(referralData.ClientPhone.value)[0],phone(altPhone)[0],clientAddressID,clientAltAddressID,referralData.ClientDOB.value,referralData.ClientUCI.value,language,diag,2,'Consumer'];
 
-			database.db.query('INSERT INTO ReferralPerson (FName,LName,Email,Phone,AltPhone,Address,AltAddress,Birthday,UCI,Language,Diagnosis) VALUES (?,?,?,?,?,?,?,?,?,?,?)',parameters,function(err,results){
+			database.db.query('INSERT INTO User (FName,LName,Email,Phone,AltPhone,Address,AltAddress,Birthday,UCI,Language,Diagnosis,Role,SubRole) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',parameters,function(err,results){
 
 				if(err){
 					reject(err);
@@ -200,7 +200,7 @@ var insertReferralIntoDatabase = function(referralData,callback)
 			var familyLName = referralData.FamilyLName.value;
 			familyLName = familyLName.charAt(0).toUpperCase() + familyLName.slice(1);
 
-			database.db.query('INSERT INTO ReferralPerson (FName,LName,Phone,Relationship) VALUES (?,?,?,?)',[familyFName,familyLName,phone(referralData.FamilyPhone.value)[0],referralData.FamilyRelationship.value],function(err,results){
+			database.db.query('INSERT INTO User (FName,LName,Phone,Relationship,Role,SubRole) VALUES (?,?,?,?,?,?)',[familyFName,familyLName,phone(referralData.FamilyPhone.value)[0],referralData.FamilyRelationship.value,5,'Family'],function(err,results){
 				if(err){
 					reject(err);
 				}
