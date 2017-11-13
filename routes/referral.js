@@ -2,9 +2,15 @@ var express = require('express');
 var router = express.Router();
 var validator = require('validator');
 
+var fs = require('fs');
+var baseDirectory = '/home/luke/FileUploads';
+
 var database = require('../database');
 var phone = require('phone');
 
+var mkdirp = require('mkdirp');
+
+const fileUpload = require('express-fileupload');
 
 //render the page after a GET call
 var renderPage = function(req,res,next){
@@ -35,9 +41,8 @@ router.get('/success',function(req,res,next){
 router.get('/',renderPage);
 
 //user submitted the form
-router.post('/',function(req,res,next){
+router.post('/',fileUpload(),function(req,res,next){
 
-	console.log(req.body);
 
 	checkIfReferralValid(req,function(err,response){
 
@@ -47,7 +52,7 @@ router.post('/',function(req,res,next){
 		}
 		else//form has passed validation, add it to the db
 		{
-			insertReferralIntoDatabase(response,function(err,referralResponse){
+			insertReferralIntoDatabase(response,req,function(err,referralResponse){
 				if(err)
 				{
 					res.render('./referral/referral', { title: 'Welcome to ' + req.app.locals.configFile.companyName,prefill:response,error:"Something went wrong. Please try again later." });
@@ -65,7 +70,7 @@ router.post('/',function(req,res,next){
 
 //starts the inserting process into the database.
 //ASSUMES INPUT IS VALIDATED
-var insertReferralIntoDatabase = function(referralData,callback)
+var insertReferralIntoDatabase = function(referralData,request,callback)
 {
 	
 	var submitterPersonID;
@@ -74,6 +79,7 @@ var insertReferralIntoDatabase = function(referralData,callback)
 	var clientAltAddressID = null;
 	var clientID;
 	var familtyID = null;
+	var referralInsertID = 0;
 
 	new Promise(function(resolve,reject){
 		//submitter
@@ -82,7 +88,7 @@ var insertReferralIntoDatabase = function(referralData,callback)
 		var subLName = referralData.SubmitterLName.value;
 		subLName = subLName.charAt(0).toUpperCase() + subLName.slice(1);
 
-		database.db.query('INSERT INTO User (FName,LName,Email,Phone,Role,SubRole) VALUES (?,?,?,?,?,?)',[subFName,subLName,referralData.SubmitterEmail.value,phone(referralData.SubmitterPhone.value)[0],4,'Submitter'],function(err,results){
+		database.db.query('INSERT INTO User (FName,LName,Email,Phone,Role,SubRole) VALUES (?,?,?,?,?,?)',[subFName,subLName,referralData.SubmitterEmail.value,phone(referralData.SubmitterPhone.value)[0],8,4],function(err,results){
 			if(err){
 				reject(err);
 			}
@@ -104,7 +110,7 @@ var insertReferralIntoDatabase = function(referralData,callback)
 				var workerLName = referralData.WorkerLName.value;
 				workerLName = workerLName.charAt(0).toUpperCase() + workerLName.slice(1);
 
-				database.db.query('INSERT INTO User (FName,LName,Email,Phone,Role,SubRole) VALUES (?,?,?,?,?,?)',[workerFName,workerLName,referralData.WorkerEmail.value,phone(referralData.WorkerPhone.value)[0],3,'Worker'],function(err,results){
+				database.db.query('INSERT INTO User (FName,LName,Email,Phone,Role,SubRole) VALUES (?,?,?,?,?,?)',[workerFName,workerLName,referralData.WorkerEmail.value,phone(referralData.WorkerPhone.value)[0],8,3],function(err,results){
 					if(err){
 						reject(err);
 					}
@@ -175,7 +181,7 @@ var insertReferralIntoDatabase = function(referralData,callback)
 			var language = referralData.ClientLanguage.value ? referralData.ClientLanguage.value : null;
 			var diag = referralData.ClientDiagnosis.value ? referralData.ClientDiagnosis.value : null;
 
-			var parameters = [clientFName,clientLName,referralData.ClientEmail.value,phone(referralData.ClientPhone.value)[0],phone(altPhone)[0],clientAddressID,clientAltAddressID,referralData.ClientDOB.value,referralData.ClientUCI.value,language,diag,2,'Consumer'];
+			var parameters = [clientFName,clientLName,referralData.ClientEmail.value,phone(referralData.ClientPhone.value)[0],phone(altPhone)[0],clientAddressID,clientAltAddressID,referralData.ClientDOB.value,referralData.ClientUCI.value,language,diag,8,2];
 
 			database.db.query('INSERT INTO User (FName,LName,Email,Phone,AltPhone,Address,AltAddress,Birthday,UCI,Language,Diagnosis,Role,SubRole) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',parameters,function(err,results){
 
@@ -200,7 +206,7 @@ var insertReferralIntoDatabase = function(referralData,callback)
 			var familyLName = referralData.FamilyLName.value;
 			familyLName = familyLName.charAt(0).toUpperCase() + familyLName.slice(1);
 
-			database.db.query('INSERT INTO User (FName,LName,Phone,Relationship,Role,SubRole) VALUES (?,?,?,?,?,?)',[familyFName,familyLName,phone(referralData.FamilyPhone.value)[0],referralData.FamilyRelationship.value,5,'Family'],function(err,results){
+			database.db.query('INSERT INTO User (FName,LName,Phone,Relationship,Role,SubRole) VALUES (?,?,?,?,?,?)',[familyFName,familyLName,phone(referralData.FamilyPhone.value)[0],referralData.FamilyRelationship.value,8,5],function(err,results){
 				if(err){
 					reject(err);
 				}
@@ -227,10 +233,43 @@ var insertReferralIntoDatabase = function(referralData,callback)
 				}
 				else
 				{
-					console.log(results.insertId);
+					referralInsertID = results.insertId;
+					console.log(referralInsertID);
 					resolve();
 				}
 			});
+		});
+	})
+	.then(function(){//add files to filesystem
+		return new Promise(function(resolve,reject){
+
+			if(request.files)
+			{
+				mkdirp(baseDirectory + "/referral/" + referralInsertID,function(err){
+					console.log("mkdirp: " + err);
+					if(err)
+					{
+						reject(err);
+					}
+					else
+					{
+						if(request.files.butthole)
+						{
+							request.files.butthole.mv(baseDirectory + "/referral/" + referralInsertID + "/" + request.files.butthole.name,function(err){
+								console.log("file uploaded: " + err);
+								resolve();
+							});
+						}
+						else{
+							resolve();
+						}
+					}
+				});
+			}
+			else
+			{
+				resolve();
+			}
 		});
 	})
 	.then(function(){//insert referral

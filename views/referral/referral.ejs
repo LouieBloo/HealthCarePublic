@@ -41,7 +41,7 @@ var globalError = locals.error ? locals.error : '';
 			</div>
 		<%}%>
 
-		<form action="./referral" method="post">
+		<form action="./referral" method="post" encType="multipart/form-data">
 			<div class="row mb-md-3">
 				<div class="col-md-7 mx-auto">
 					<div class="row form-group mt-md-4">
@@ -296,7 +296,24 @@ var globalError = locals.error ? locals.error : '';
 						</div>
 					</div>
 				</div>
-			</div> <!--end first form row-->
+			</div> <!--end family row-->
+
+			<div class="row mb-md-3 ">
+				<div class="col-md-7 mx-auto">
+					<h5 id="FamilyHeader">Files</h5>
+					<div class="row form-group mt-md-4">
+						<label for="FamilyFName" class="col-2 col-form-label">File 1</label>
+						<div class="col-md-5 mb-2 mb-sm-0">
+						    
+						    <input type="file" name="butthole" />
+						</div>
+						<div class="col-md-5">
+							
+							
+						</div>
+					</div>
+				</div>
+			</div> <!--end family row-->
 
 			<div class="row">
 				<div class="col-md-4 mx-auto form-group">
