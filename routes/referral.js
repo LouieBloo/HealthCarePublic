@@ -253,16 +253,20 @@ var insertReferralIntoDatabase = function(referralData,request,callback)
 					}
 					else
 					{
-						if(request.files.butthole)
+						if(request.files.ipp)
 						{
-							request.files.butthole.mv(baseDirectory + "/referral/" + referralInsertID + "/" + request.files.butthole.name,function(err){
-								console.log("file uploaded: " + err);
-								resolve();
+							request.files.ipp.mv(baseDirectory + "/referral/" + referralInsertID + "/ipp_" + request.files.ipp.name ,function(err){
+								console.log("ipp uploaded: " + err);
 							});
 						}
-						else{
-							resolve();
+						if(request.files.cder)
+						{
+							request.files.cder.mv(baseDirectory + "/referral/" + referralInsertID + "/cder_" + request.files.cder.name ,function(err){
+								console.log("cder uploaded: " + err);
+							});
 						}
+
+						resolve();
 					}
 				});
 			}
@@ -433,6 +437,27 @@ var checkIfReferralValid = function(req,callback)
 		}
 		//end family
 
+		//files
+		if(req.files)
+		{
+			if(!req.files.ipp)
+			{
+				error = true;
+				response.Files.error = 'is-invalid';
+			}
+			if(!req.files.cder)
+			{
+				error = true;
+				response.Files.error = 'is-invalid';
+			}
+		}
+		else
+		{
+			error = true;
+			response.Files.error = 'is-invalid';
+		}
+		//end files
+
 		callback(error,response);
 
 	});
@@ -489,6 +514,7 @@ var buildDefaultPrefill = function(req,callback)
 	response.FamilyPhone = {value: req.body.FamilyPhone,error: ''};
 	response.FamilyRelationship = {value: req.body.FamilyRelationship,error: ''};
 
+	response.Files = {error:''};
 
 	callback(null,response);
 };

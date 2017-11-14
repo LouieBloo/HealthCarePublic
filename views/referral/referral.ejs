@@ -301,15 +301,19 @@ var globalError = locals.error ? locals.error : '';
 			<div class="row mb-md-3 ">
 				<div class="col-md-7 mx-auto">
 					<h5 id="FamilyHeader">Files</h5>
-					<div class="row form-group mt-md-4">
-						<label for="FamilyFName" class="col-2 col-form-label">File 1</label>
-						<div class="col-md-5 mb-2 mb-sm-0">
-						    
-						    <input type="file" name="butthole" />
+					<%if(prefill.Files.error){%>
+						<p class="text-danger"><strong>You must attach an IPP and CDER form</strong></p>
+					<%}%>
+					<div class="row form-group mt-md-4 ">
+						<label for="ipp" class="col-12 col-form-label">IPP (required)</label>
+						<div class="col-12 mb-2 mb-sm-0">
+						    <input type="file" class="form-control-file <%= prefill.Files.error%>" name="ipp"  />
 						</div>
-						<div class="col-md-5">
-							
-							
+					</div>
+					<div class="row form-group mt-md-4 ">
+						<label for="cder" class="col-12 col-form-label">CDER (required)</label>
+						<div class="col-12 mb-2 mb-sm-0">
+						    <input type="file" class="form-control-file" name="cder" />
 						</div>
 					</div>
 				</div>
