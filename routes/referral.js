@@ -80,6 +80,7 @@ var insertReferralIntoDatabase = function(referralData,request,callback)
 	var clientID;
 	var familtyID = null;
 	var referralInsertID = 0;
+	var referralTypeID = 0;
 
 	new Promise(function(resolve,reject){
 		//submitter
@@ -127,7 +128,7 @@ var insertReferralIntoDatabase = function(referralData,request,callback)
 			}
 		});
 	})
-	.then(function(){//CLIENT ADDRESS
+	.then(function(){//consumer ADDRESS
 		return new Promise(function(resolve,reject){
 
 			var street2 = referralData.ClientStreet2.value ? referralData.ClientStreet2.value : null;
@@ -145,7 +146,7 @@ var insertReferralIntoDatabase = function(referralData,request,callback)
 
 		});
 	})
-	.then(function(){//CLIENT ALT ADDRESS
+	.then(function(){//consumer ALT ADDRESS
 		return new Promise(function(resolve,reject){
 
 			if(referralData.ClientAltStreet.value)//if there is a alt street address we assume there is a second address to insert
@@ -169,7 +170,7 @@ var insertReferralIntoDatabase = function(referralData,request,callback)
 			}
 		});
 	})
-	.then(function(){//insert the client into the db
+	.then(function(){//insert the consumer into the db
 		return new Promise(function(resolve,reject){
 			
 			var clientFName = referralData.ClientFName.value;
@@ -181,17 +182,41 @@ var insertReferralIntoDatabase = function(referralData,request,callback)
 			var language = referralData.ClientLanguage.value ? referralData.ClientLanguage.value : null;
 			var diag = referralData.ClientDiagnosis.value ? referralData.ClientDiagnosis.value : null;
 
-			var parameters = [clientFName,clientLName,referralData.ClientEmail.value,phone(referralData.ClientPhone.value)[0],phone(altPhone)[0],clientAddressID,clientAltAddressID,referralData.ClientDOB.value,referralData.ClientUCI.value,language,diag,9,2];
+			
+			switch(referralData.ReferralType.value){
+				case "EOR":
+					referralTypeID = 1;
+					break;
+				case "PA":
+					referralTypeID = 2;
+					break;
+				case "Respit":
+					referralTypeID = 2;
+					break;
+			}
 
-			database.db.query('INSERT INTO User (FName,LName,Email,Phone,AltPhone,Address,AltAddress,Birthday,UCI,Language,Diagnosis,Role,SubRole) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',parameters,function(err,results){
+
+			var parameters = [clientFName,clientLName,referralData.ClientEmail.value,phone(referralData.ClientPhone.value)[0],phone(altPhone)[0],clientAddressID,clientAltAddressID,referralData.ClientDOB.value,language,9,2];
+
+			database.db.query('INSERT INTO User (FName,LName,Email,Phone,AltPhone,Address,AltAddress,Birthday,Language,Role,SubRole) VALUES (?,?,?,?,?,?,?,?,?,?,?)',parameters,function(err,results){
 
 				if(err){
 					reject(err);
 				}
 				else
 				{
+					//insert the consumer details
 					clientID = results.insertId;
-					resolve();
+					var parameters = [clientID,referralData.ClientUCI.value,diag,3,submitterPersonID,referralTypeID];
+					database.db.query('INSERT INTO ConsumerDetails (ConsumerID,UCI,Diagnosis,Status,PayerID,Type) VALUES (?,?,?,?,?,?)',parameters,function(err,results){
+						if(err){
+							reject(err);
+						}
+						else
+						{
+							resolve();
+						}
+					});
 				}
 			});
 
@@ -225,7 +250,16 @@ var insertReferralIntoDatabase = function(referralData,request,callback)
 			var hourType = hours ? referralData.ClientHourType.value : null;
 			var additionalInfo = referralData.ClientAdditionalInfo.value ? referralData.ClientAdditionalInfo.value : null;
 
-			var parameters = [referralData.ReferralType.value,submitterPersonID,clientID,familyID,workerPersonID,hours,hourType,additionalInfo];
+			switch(hourType){
+				case "quarterly":
+					hourType = 2;
+					break;
+				case "monthly":
+					hourType = 1;
+					break;
+			}
+
+			var parameters = [referralTypeID,submitterPersonID,clientID,familyID,workerPersonID,hours,hourType,additionalInfo];
 
 			database.db.query('INSERT INTO Referral (ReferralType,Submitter,Client,Family,Worker,Hours,HourType,AdditionalInfo) VALUES (?,?,?,?,?,?,?,?)',parameters,function(err,results){
 				if(err){
